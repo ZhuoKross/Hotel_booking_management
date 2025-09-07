@@ -4,15 +4,12 @@ import com.microservice.host.DTO.HostDTO;
 import com.microservice.host.DataMocked;
 import com.microservice.host.Entity.Host;
 import com.microservice.host.Repository.HostRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;

@@ -1,8 +1,8 @@
 package com.microservice.booking.service;
 
 
+import com.microservice.booking.Client.HostClient;
 import com.microservice.booking.Client.RoomClient;
-import com.microservice.booking.Client.hostClient;
 import com.microservice.booking.Client.model.HostDTO;
 import com.microservice.booking.Client.model.RoomDTO;
 import com.microservice.booking.DTO.BookingDTO;
@@ -20,10 +20,10 @@ import java.util.List;
 public class BookingService {
 
     private BookingRepository bookingRepository;
-    private hostClient hostClient;
+    private HostClient hostClient;
     private RoomClient roomClient;
 
-    public BookingService(BookingRepository bookingRepository, hostClient hostClient, RoomClient roomClient) {
+    public BookingService(BookingRepository bookingRepository, HostClient hostClient, RoomClient roomClient) {
         this.bookingRepository = bookingRepository;
         this.hostClient = hostClient;
         this.roomClient = roomClient;
