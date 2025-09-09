@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("Wrong input", LocalDateTime.now(), "Check the value you passed and try again."));
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(RoomNotFoundException.class)
     public ResponseEntity<Response<String>> handleNotFound (){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<String>("Object not found", LocalDateTime.now(), "Check the URL and try again"));
     }
