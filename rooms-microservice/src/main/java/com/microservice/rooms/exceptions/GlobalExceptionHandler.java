@@ -5,6 +5,7 @@ import jakarta.ws.rs.NotFoundException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,5 +24,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RoomNotFoundException.class)
     public ResponseEntity<Response<String>> handleNotFound (){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<String>("Object not found", LocalDateTime.now(), "Check the URL and try again"));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Response<String>> handleArgumentNotValid(){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("malformed request body", LocalDateTime.now(), "check the structure of the object and try again"));
     }
 }

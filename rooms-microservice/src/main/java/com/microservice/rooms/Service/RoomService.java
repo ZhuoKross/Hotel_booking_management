@@ -3,9 +3,13 @@ package com.microservice.rooms.Service;
 import com.microservice.rooms.DTO.RoomDTO;
 import com.microservice.rooms.Entity.Room;
 import com.microservice.rooms.Repository.RoomRepository;
+import com.microservice.rooms.Utils.Response;
 import com.microservice.rooms.exceptions.RoomNotFoundException;
 import jakarta.ws.rs.NotFoundException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
@@ -39,10 +43,10 @@ public class RoomService {
     }
 
     public RoomDTO getOneRoom (Long idRoom){
-        Room roomEntity = roomRepository.findById(idRoom).orElse(null);
-        if(roomEntity == null){
-            throw new RoomNotFoundException();
+        if(idRoom == null){
+            throw new IllegalArgumentException();
         }
+        Room roomEntity = roomRepository.findById(idRoom).orElseThrow(RoomNotFoundException::new);
         RoomDTO roomDTO = RoomDTO.builder()
                 .id(roomEntity.id)
                 .numBeds(roomEntity.numBeds)
@@ -69,5 +73,31 @@ public class RoomService {
 
         return roomDTO;
     }
+
+    public RoomDTO updateRoom (RoomDTO roomToUpdate, Long idRoom){
+        if (idRoom == null){
+            throw new IllegalArgumentException();
+        }
+
+        Room roomFound = roomRepository.findById(idRoom).orElseThrow(RoomNotFoundException::new);
+        roomFound.hasTv = roomToUpdate.hasTv();
+        roomFound.hasWifi = roomToUpdate.hasWifi();
+        roomFound.price = roomToUpdate.price();
+        roomFound.personsCapacity = roomToUpdate.personsCapacity();
+        roomFound.numBeds = roomToUpdate.numBeds();
+
+        roomRepository.save(roomFound);
+        return roomToUpdate;
+    }
+
+    public boolean deleteRoom(Long idRoom){
+        if(idRoom == null){
+            throw new IllegalArgumentException();
+        }
+
+        roomRepository.deleteById(idRoom);
+        return true;
+    }
+
 
 }

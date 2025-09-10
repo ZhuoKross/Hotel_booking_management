@@ -4,6 +4,7 @@ import com.microservice.rooms.DTO.RoomDTO;
 import com.microservice.rooms.Entity.Room;
 import com.microservice.rooms.Service.RoomService;
 import com.microservice.rooms.Utils.Response;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,14 +33,26 @@ public class RoomController {
         return ResponseEntity.ok(new Response<RoomDTO>("Room fetched successfully", LocalDateTime.now(), roomDTOFound));
     }
 
-
     @PostMapping("/create")
-    public ResponseEntity<?> createRoom(@RequestBody RoomDTO requesRoomDTO) {
-        try {
-            RoomDTO roomDTOCreated = roomService.createRoom(requesRoomDTO);
-            return ResponseEntity.ok(new Response<RoomDTO>("Room created successfully", LocalDateTime.now(), roomDTOCreated));
-        } catch (Exception e) {
-            return ResponseEntity.unprocessableEntity().body(new Response<String>("Couldn't create the room", LocalDateTime.now(), e.getMessage()));
+    public ResponseEntity<?> createRoom(@Valid @RequestBody RoomDTO requesRoomDTO) {
+        RoomDTO roomDTOCreated = roomService.createRoom(requesRoomDTO);
+        return ResponseEntity.ok(new Response<RoomDTO>("Room created successfully", LocalDateTime.now(), roomDTOCreated));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateRoom(@Valid @RequestBody RoomDTO roomToUpdate, @PathVariable("id") Long idRoom) {
+        System.out.println("body request: " + roomToUpdate);
+        RoomDTO roomUpdated = roomService.updateRoom(roomToUpdate, idRoom);
+        return ResponseEntity.ok(new Response<RoomDTO>("Room updated succesfully", LocalDateTime.now(), roomUpdated));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response<String>> deleteRoom (@PathVariable("id") Long idRoom){
+        boolean isDeletedElement = roomService.deleteRoom(idRoom);
+        if(isDeletedElement){
+            return ResponseEntity.ok(new Response<String>("Room deleted succesfully", LocalDateTime.now(), "no data"));
+        }else {
+            return ResponseEntity.unprocessableEntity().body(new Response<String>("Unprocessble action", LocalDateTime.now(), "no data"));
         }
     }
 }
