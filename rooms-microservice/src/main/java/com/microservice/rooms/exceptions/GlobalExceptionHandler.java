@@ -27,6 +27,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Response<String>> handleNotValidArgument (){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("Malfomed body request, verify and try again.", LocalDateTime.now(), "no data"));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response<String>> handleArgumentNotValid(){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("malformed request body", LocalDateTime.now(), "check the structure of the object and try again"));
     }

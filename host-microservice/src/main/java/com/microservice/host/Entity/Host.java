@@ -24,9 +24,6 @@ public class Host {
     public boolean isRegularHost;
 
     @Column
-    public double price;
-
-    @Column
     public int document;
 
     @Column
