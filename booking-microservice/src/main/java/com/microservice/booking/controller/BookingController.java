@@ -46,11 +46,12 @@ public class BookingController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createBooking (@RequestBody BookingDTO requestBookingDTO){
-        try {
-            ResponseBookingDTO responseBookingDTO = bookingService.createBooking(requestBookingDTO);
-            return ResponseEntity.ok(new Response<ResponseBookingDTO>("Booking created succesfully", LocalDateTime.now(), responseBookingDTO));
+        ResponseBookingDTO responseBookingDTO = bookingService.createBooking(requestBookingDTO);
+        return ResponseEntity.ok(new Response<ResponseBookingDTO>("Booking created succesfully", LocalDateTime.now(), responseBookingDTO));
+        /*try {
+
         } catch (Exception e) {
             return ResponseEntity.unprocessableEntity().body(new Response<String>("Couldn't create the booking", LocalDateTime.now(), e.getMessage()));
-        }
+        }*/
     }
 }

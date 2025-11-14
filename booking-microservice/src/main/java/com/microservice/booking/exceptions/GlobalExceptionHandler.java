@@ -41,4 +41,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Response<String>> handleBookingNotFoundException(){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<String>("Booking not Found. Try again later", LocalDateTime.now(), "no data"));
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Response<String>> handleResourceNotFoundException(ResourceNotFoundException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<String>("The resource wasn't found, try again.", LocalDateTime.now(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<Response<String>> handleServiceUnavailableException(ServiceUnavailableException exception){
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new Response<String>("The service is unavailable right now, please try again later.", LocalDateTime.now(), exception.getMessage()));
+    }
 }

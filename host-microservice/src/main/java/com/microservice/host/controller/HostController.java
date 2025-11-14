@@ -29,7 +29,7 @@ public class HostController {
         List<Host> listOfEntityHost =  hostService.getAllHosts();
 
         List<HostDTO> hostDTOList = listOfEntityHost.stream()
-                .map((host) -> new HostDTO(host.id,host.isVipHost, host.isRegularHost, host.price,host.document, host.name))
+                .map((host) -> new HostDTO(host.id,host.isVipHost, host.isRegularHost,host.document, host.name))
                 .toList();
 
         return ResponseEntity.ok().body(hostDTOList);

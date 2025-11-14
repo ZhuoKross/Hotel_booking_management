@@ -1,0 +1,4 @@
+package com.microservice.booking.exceptions;
+
+public class ServiceUnavailableException extends RuntimeException{
+}

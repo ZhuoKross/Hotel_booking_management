@@ -27,7 +27,6 @@ public class HostService {
                 .id(hostFound.id)
                 .isVipHost(hostFound.isVipHost)
                 .isRegularHost(hostFound.isRegularHost)
-                .price(hostFound.price)
                 .document(hostFound.document)
                 .name(hostFound.name)
                 .build();
@@ -40,7 +39,6 @@ public class HostService {
         Host hostEntity = Host.builder()
                 .isRegularHost(hostDTO.isRegularHost())
                 .isVipHost(hostDTO.isVipHost())
-                .price(hostDTO.price())
                 .document(hostDTO.document())
                 .name(hostDTO.name())
                 .build();
@@ -53,7 +51,6 @@ public class HostService {
         Host hostEntity = Host.builder()
                 .isVipHost(hostDTO.isVipHost())
                 .isRegularHost(hostDTO.isRegularHost())
-                .price(hostDTO.price())
                 .document(hostDTO.document())
                 .name(hostDTO.name())
                 .build();
@@ -63,7 +60,6 @@ public class HostService {
 
         hostToUpdate.isRegularHost = hostEntity.isRegularHost;
         hostToUpdate.isVipHost = hostEntity.isVipHost;
-        hostToUpdate.price = hostEntity.price;
         hostToUpdate.document = hostEntity.document;
         hostToUpdate.name = hostEntity.name;
 
