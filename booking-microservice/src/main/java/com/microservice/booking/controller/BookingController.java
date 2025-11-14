@@ -29,6 +29,7 @@ public class BookingController {
         return ResponseEntity.ok(new Response<List<ResponseBookingDTO>>("Bookings fetched succesfully", LocalDateTime.now(), bookingList));
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getBooking(@PathVariable Long id) {
         ResponseBookingDTO bookingDTO = bookingService.getBooking(id);

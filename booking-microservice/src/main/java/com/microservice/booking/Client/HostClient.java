@@ -1,16 +1,18 @@
 package com.microservice.booking.Client;
 
 import com.microservice.booking.Client.model.HostDTO;
-import com.microservice.booking.Client.model.ResponseHostObj;
+import com.microservice.booking.config.feignClient.FeignConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-@FeignClient(name = "hostClient", url = "http://localhost:9092", path = "/api/v1/hosts/")
+@FeignClient(
+        name = "hostClient",
+        url = "http://localhost:9092",
+        configuration = FeignConfiguration.class)
 public interface HostClient {
-    @GetMapping("/{id}")
-    ResponseHostObj<HostDTO> getHost(@PathVariable("id") Long id);
+    @GetMapping("/api/v1/hosts/{id}")
+    HostDTO getHost(@PathVariable Long id);
 
 }

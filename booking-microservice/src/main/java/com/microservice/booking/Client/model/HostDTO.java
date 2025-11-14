@@ -7,7 +7,6 @@ public record HostDTO(
         Long id,
         boolean isVipHost,
         boolean isRegularHost,
-        double price,
         int document,
         String name) {
 }

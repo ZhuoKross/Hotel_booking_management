@@ -20,7 +20,7 @@ public class HostController {
 
     private HostService hostService;
 
-    public HostController(HostService hostService) {
+    public HostController(HostService hostService){
         this.hostService = hostService;
     }
 
