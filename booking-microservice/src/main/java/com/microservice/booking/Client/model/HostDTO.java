@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record HostDTO(
+        Long id,
         boolean isVipHost,
         boolean isRegularHost,
         double price,

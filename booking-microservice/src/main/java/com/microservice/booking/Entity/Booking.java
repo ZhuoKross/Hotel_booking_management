@@ -17,7 +17,7 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idBooking;
+    public Long idBooking;
     @Column(name = "start_date")
     public LocalDate startDate;
     @Column(name = "end_date")

@@ -4,17 +4,20 @@ package com.microservice.booking.service;
 import com.microservice.booking.Client.HostClient;
 import com.microservice.booking.Client.RoomClient;
 import com.microservice.booking.Client.model.HostDTO;
+import com.microservice.booking.Client.model.ResponseHostObj;
+import com.microservice.booking.Client.model.ResponseRoomObj;
 import com.microservice.booking.Client.model.RoomDTO;
 import com.microservice.booking.DTO.BookingDTO;
 import com.microservice.booking.DTO.ResponseBookingDTO;
 import com.microservice.booking.Entity.Booking;
-import com.microservice.booking.Utils.Response;
+import com.microservice.booking.exceptions.BookingNotFoundException;
 import com.microservice.booking.repository.BookingRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.util.List;
+
+
+
+
 
 @Service
 public class BookingService {
@@ -32,15 +35,23 @@ public class BookingService {
 
     public List<ResponseBookingDTO> getAllBookings() {
         List<Booking> bookingListEntity = bookingRepository.findAll();
+        if(bookingListEntity.isEmpty()){
+            throw new BookingNotFoundException();
+        }
         List<ResponseBookingDTO> responseBookingDTOList = bookingListEntity.stream()
                 .map((bookingEntity) -> {
-                    RoomDTO roomDTOFound = roomClient.getRoomClient(bookingEntity.idRoom);
-                    HostDTO hostDTOFound = hostClient.getHost(bookingEntity.idHost);
+                    ResponseRoomObj<RoomDTO> roomDTOFound = roomClient.getRoomClient(bookingEntity.idRoom);
+                    ResponseHostObj<HostDTO> hostDTOFound = hostClient.getHost(bookingEntity.idHost);
+
+                    RoomDTO roomData = roomDTOFound.data();
+                    HostDTO hostData = hostDTOFound.data();
+
                     return ResponseBookingDTO.builder()
+                            .idBooking(bookingEntity.idBooking)
                             .startDate(bookingEntity.startDate)
                             .endDate(bookingEntity.endDate)
-                            .rooms(roomDTOFound)
-                            .hosts(hostDTOFound)
+                            .rooms(roomData)
+                            .hosts(hostData)
                             .build();
                 })
                 .toList();
@@ -50,15 +61,21 @@ public class BookingService {
 
 
     public ResponseBookingDTO getBooking(Long idBooking) {
-        Booking bookingFound = bookingRepository.findById(idBooking).orElse(null);
-        HostDTO hostDTOFound = hostClient.getHost(bookingFound.idHost);
-        RoomDTO roomDTOFound = roomClient.getRoomClient(bookingFound.idRoom);
+        if(idBooking == null){
+            throw new IllegalArgumentException();
+        }
+        Booking bookingFound = bookingRepository.findById(idBooking).orElseThrow(BookingNotFoundException::new);
+        ResponseHostObj<HostDTO> hostDTOFound = hostClient.getHost(bookingFound.idHost);
+        ResponseRoomObj<RoomDTO> roomDTOFound = roomClient.getRoomClient(bookingFound.idRoom);
+        RoomDTO roomData = roomDTOFound.data();
+        HostDTO hostData = hostDTOFound.data();
 
         ResponseBookingDTO bookingDTO = ResponseBookingDTO.builder()
+                .idBooking(bookingFound.idBooking)
                 .startDate(bookingFound.startDate)
                 .endDate(bookingFound.endDate)
-                .rooms(roomDTOFound)
-                .hosts(hostDTOFound)
+                .rooms(roomData)
+                .hosts(hostData)
                 .build();
 
         return bookingDTO;
@@ -66,8 +83,13 @@ public class BookingService {
 
 
     public ResponseBookingDTO createBooking (BookingDTO bookingDTO){
-        HostDTO hostDTO = hostClient.getHost(bookingDTO.idHost());
-        RoomDTO roomDTO = roomClient.getRoomClient(bookingDTO.idRoom());
+        ResponseHostObj<HostDTO> hostDTO = hostClient.getHost(bookingDTO.idHost());
+        ResponseRoomObj<RoomDTO> roomDTO = roomClient.getRoomClient(bookingDTO.idRoom());
+        HostDTO hostData = hostDTO.data();
+        RoomDTO roomData = roomDTO.data();
+
+        System.out.println("data of HostDTO:" +  hostData);
+        System.out.println("data of RoomDTODTO:" +  hostData);
         Booking bookingEntity = Booking.builder()
                 .startDate(bookingDTO.startDate())
                 .endDate(bookingDTO.endDate())
@@ -78,10 +100,11 @@ public class BookingService {
         Booking bookingCreated = bookingRepository.save(bookingEntity);
 
         return ResponseBookingDTO.builder()
+                .idBooking(bookingCreated.idBooking)
                 .startDate(bookingCreated.startDate)
                 .endDate(bookingCreated.endDate)
-                .rooms(roomDTO)
-                .hosts(hostDTO)
+                .rooms(roomData)
+                .hosts(hostData)
                 .build();
     }
 }

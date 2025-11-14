@@ -71,7 +71,13 @@ public class RoomService {
 
         Room roomCreated = roomRepository.save(roomEntity);
 
-        return roomDTO;
+        return RoomDTO.builder()
+                .id(roomCreated.id)
+                .hasTv(roomCreated.hasTv)
+                .hasWifi(roomCreated.hasWifi)
+                .price(roomCreated.price)
+                .personsCapacity(roomCreated.personsCapacity)
+                .build();
     }
 
     public RoomDTO updateRoom (RoomDTO roomToUpdate, Long idRoom){
@@ -87,7 +93,13 @@ public class RoomService {
         roomFound.numBeds = roomToUpdate.numBeds();
 
         roomRepository.save(roomFound);
-        return roomToUpdate;
+        return RoomDTO.builder()
+                .id(roomFound.id)
+                .hasTv(roomFound.hasTv)
+                .hasWifi(roomFound.hasWifi)
+                .price(roomFound.price)
+                .personsCapacity(roomFound.personsCapacity)
+                .build();
     }
 
     public boolean deleteRoom(Long idRoom){

@@ -33,7 +33,7 @@ public class HostController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response<HostDTO>> getHost(@PathVariable Long id) {
+    public ResponseEntity<Response<HostDTO>> getHost(@PathVariable("id") Long id) {
         HostDTO hostFound = hostService.getOneHost(id);
         return ResponseEntity.ok(new Response<HostDTO>("Host fetched succesfully", LocalDateTime.now(), hostFound));
     }

@@ -22,25 +22,25 @@ public class RoomController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllRooms() {
+    public ResponseEntity<Response<List<RoomDTO>>> getAllRooms() {
         List<RoomDTO> roomList = roomService.getAllRooms();
         return ResponseEntity.ok(new Response<List<RoomDTO>>("Rooms fetched successfully", LocalDateTime.now(), roomList));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOneRoom(@PathVariable("id") Long idRoom) {
+    public ResponseEntity<Response<RoomDTO>> getOneRoom(@PathVariable("id") Long idRoom) {
         RoomDTO roomDTOFound = roomService.getOneRoom(idRoom);
         return ResponseEntity.ok(new Response<RoomDTO>("Room fetched successfully", LocalDateTime.now(), roomDTOFound));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createRoom(@Valid @RequestBody RoomDTO requesRoomDTO) {
+    public ResponseEntity<Response<RoomDTO>> createRoom(@Valid @RequestBody RoomDTO requesRoomDTO) {
         RoomDTO roomDTOCreated = roomService.createRoom(requesRoomDTO);
         return ResponseEntity.ok(new Response<RoomDTO>("Room created successfully", LocalDateTime.now(), roomDTOCreated));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateRoom(@Valid @RequestBody RoomDTO roomToUpdate, @PathVariable("id") Long idRoom) {
+    public ResponseEntity<Response<RoomDTO>> updateRoom(@Valid @RequestBody RoomDTO roomToUpdate, @PathVariable("id") Long idRoom) {
         System.out.println("body request: " + roomToUpdate);
         RoomDTO roomUpdated = roomService.updateRoom(roomToUpdate, idRoom);
         return ResponseEntity.ok(new Response<RoomDTO>("Room updated succesfully", LocalDateTime.now(), roomUpdated));

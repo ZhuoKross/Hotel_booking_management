@@ -7,5 +7,5 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-public record ResponseBookingDTO(LocalDate startDate, LocalDate endDate, HostDTO hosts, RoomDTO rooms) {
+public record ResponseBookingDTO(Long idBooking,LocalDate startDate, LocalDate endDate, HostDTO hosts, RoomDTO rooms) {
 }
