@@ -18,16 +18,16 @@ public class RoomService {
 
     private RoomRepository roomRepository;
 
-    public RoomService(RoomRepository roomRepository){
+    public RoomService(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
     }
 
-    public List<RoomDTO> getAllRooms (){
+    public List<RoomDTO> getAllRooms() {
         List<Room> roomListEntity = roomRepository.findAll();
-        if(roomListEntity.isEmpty()){
+        if (roomListEntity.isEmpty()) {
             throw new RoomNotFoundException();
         }
-        List<RoomDTO> roomDTOList = roomListEntity.stream()
+        return roomListEntity.stream()
                 .map((room) -> {
                             return RoomDTO.builder()
                                     .id(room.id)
@@ -36,18 +36,17 @@ public class RoomService {
                                     .hasTv(room.hasTv)
                                     .price(room.price)
                                     .personsCapacity(room.personsCapacity)
-                                    .build();}
+                                    .build();
+                        }
                 ).toList();
-
-        return roomDTOList;
     }
 
-    public RoomDTO getOneRoom (Long idRoom){
-        if(idRoom == null){
+    public RoomDTO getOneRoom(Long idRoom) {
+        if (idRoom == null) {
             throw new IllegalArgumentException();
         }
         Room roomEntity = roomRepository.findById(idRoom).orElseThrow(RoomNotFoundException::new);
-        RoomDTO roomDTO = RoomDTO.builder()
+        return RoomDTO.builder()
                 .id(roomEntity.id)
                 .numBeds(roomEntity.numBeds)
                 .hasWifi(roomEntity.hasWifi)
@@ -55,12 +54,10 @@ public class RoomService {
                 .price(roomEntity.price)
                 .personsCapacity(roomEntity.personsCapacity)
                 .build();
-
-        return roomDTO;
     }
 
 
-    public RoomDTO createRoom (RoomDTO roomDTO){
+    public RoomDTO createRoom(RoomDTO roomDTO) {
         Room roomEntity = Room.builder()
                 .numBeds(roomDTO.numBeds())
                 .hasWifi(roomDTO.hasWifi())
@@ -80,8 +77,8 @@ public class RoomService {
                 .build();
     }
 
-    public RoomDTO updateRoom (RoomDTO roomToUpdate, Long idRoom){
-        if (idRoom == null){
+    public RoomDTO updateRoom(RoomDTO roomToUpdate, Long idRoom) {
+        if (idRoom == null) {
             throw new IllegalArgumentException();
         }
 
@@ -102,8 +99,8 @@ public class RoomService {
                 .build();
     }
 
-    public boolean deleteRoom(Long idRoom){
-        if(idRoom == null){
+    public boolean deleteRoom(Long idRoom) {
+        if (idRoom == null) {
             throw new IllegalArgumentException();
         }
 

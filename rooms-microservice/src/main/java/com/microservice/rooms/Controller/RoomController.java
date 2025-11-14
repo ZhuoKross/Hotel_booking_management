@@ -43,16 +43,16 @@ public class RoomController {
     public ResponseEntity<Response<RoomDTO>> updateRoom(@Valid @RequestBody RoomDTO roomToUpdate, @PathVariable("id") Long idRoom) {
         System.out.println("body request: " + roomToUpdate);
         RoomDTO roomUpdated = roomService.updateRoom(roomToUpdate, idRoom);
-        return ResponseEntity.ok(new Response<RoomDTO>("Room updated succesfully", LocalDateTime.now(), roomUpdated));
+        return ResponseEntity.ok(new Response<RoomDTO>("Room updated successfully", LocalDateTime.now(), roomUpdated));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Response<String>> deleteRoom (@PathVariable("id") Long idRoom){
         boolean isDeletedElement = roomService.deleteRoom(idRoom);
         if(isDeletedElement){
-            return ResponseEntity.ok(new Response<String>("Room deleted succesfully", LocalDateTime.now(), "no data"));
+            return ResponseEntity.ok(new Response<String>("Room deleted successfully", LocalDateTime.now(), "no data"));
         }else {
-            return ResponseEntity.unprocessableEntity().body(new Response<String>("Unprocessble action", LocalDateTime.now(), "no data"));
+            return ResponseEntity.unprocessableEntity().body(new Response<String>("Unprocessable action", LocalDateTime.now(), "no data"));
         }
     }
 }
