@@ -1,5 +1,7 @@
 package com.microservice.rooms.DTO;
 
+import com.microservice.rooms.Entity.Category;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import org.hibernate.validator.constraints.Range;
@@ -18,5 +20,7 @@ public record RoomDTO(
         double price,
         @NotNull(message = "the persons capacity field must not be null")
         @Range(min = 1, max = 4, message = "the persons capacity must be at least 1 or max 4")
-        int personsCapacity
+        int personsCapacity,
+        @NotNull
+        CategoryDTO category
 ) {}

@@ -30,4 +30,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Response<String>> handleNotValidArgument (){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("Malfomed body request, verify and try again.", LocalDateTime.now(), "no data"));
     }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<Response<String>> handleCategoryNotFoundException (CategoryNotFoundException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<String>("Category was not found, try again", LocalDateTime.now(), exception.getMessage()));
+    }
 }

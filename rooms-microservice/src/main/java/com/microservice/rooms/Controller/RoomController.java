@@ -47,12 +47,8 @@ public class RoomController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response<String>> deleteRoom (@PathVariable("id") Long idRoom){
-        boolean isDeletedElement = roomService.deleteRoom(idRoom);
-        if(isDeletedElement){
-            return ResponseEntity.ok(new Response<String>("Room deleted successfully", LocalDateTime.now(), "no data"));
-        }else {
-            return ResponseEntity.unprocessableEntity().body(new Response<String>("Unprocessable action", LocalDateTime.now(), "no data"));
-        }
+    public ResponseEntity<Response<String>> deleteRoom(@PathVariable("id") Long idRoom) {
+        roomService.deleteRoom(idRoom);
+        return ResponseEntity.ok(new Response<String>("Room deleted successfully", LocalDateTime.now(), "no data"));
     }
 }

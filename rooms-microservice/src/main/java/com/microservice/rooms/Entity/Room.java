@@ -27,4 +27,7 @@ public class Room {
     @Column(name = "persons_capacity")
     public int personsCapacity;
 
+    @OneToOne(targetEntity = Category.class)
+    public Category category;
+
 }

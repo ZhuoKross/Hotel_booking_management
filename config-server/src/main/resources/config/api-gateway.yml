@@ -28,6 +28,10 @@ spring:
               uri: lb://rooms-microservice
               predicates:
                   - Path=/api/v1/rooms/**
+            - id: rooms-microservice-categories
+              uri: lb://rooms-microservice
+              predicates:
+                  - Path=/api/v1/categories/**
 
 
 
