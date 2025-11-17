@@ -23,7 +23,7 @@ public class Room {
     @Column(name = "has_tv")
     public boolean hasTv;
     @Column
-    public double price;
+    public float price;
     @Column(name = "persons_capacity")
     public int personsCapacity;
 

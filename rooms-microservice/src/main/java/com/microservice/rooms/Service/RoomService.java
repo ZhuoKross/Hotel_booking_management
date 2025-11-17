@@ -5,15 +5,10 @@ import com.microservice.rooms.DTO.RoomDTO;
 import com.microservice.rooms.Entity.Category;
 import com.microservice.rooms.Entity.Room;
 import com.microservice.rooms.Repository.RoomRepository;
-import com.microservice.rooms.Utils.Response;
+import com.microservice.rooms.Utils.RoomUtils;
 import com.microservice.rooms.exceptions.RoomNotFoundException;
-import jakarta.ws.rs.NotFoundException;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,10 +16,12 @@ public class RoomService {
 
     private RoomRepository roomRepository;
     private CategoryService categoryService;
+    private RoomUtils roomUtils;
 
-    public RoomService(RoomRepository roomRepository, CategoryService categoryService) {
+    public RoomService(RoomRepository roomRepository, CategoryService categoryService, RoomUtils roomUtils) {
         this.roomRepository = roomRepository;
         this.categoryService = categoryService;
+        this.roomUtils = roomUtils;
     }
 
     public List<RoomDTO> getAllRooms() {
@@ -68,11 +65,12 @@ public class RoomService {
 
 
     public RoomDTO createRoom(RoomDTO roomDTO) {
+        float valueOfRoom = roomUtils.calculateValueRoom(roomDTO);
         Room roomEntity = Room.builder()
                 .numBeds(roomDTO.numBeds())
                 .hasWifi(roomDTO.hasWifi())
                 .hasTv(roomDTO.hasTv())
-                .price(roomDTO.price())
+                .price(valueOfRoom)
                 .personsCapacity(roomDTO.personsCapacity())
                 .isOccupied(true)
                 .category(Category.builder()
@@ -99,11 +97,11 @@ public class RoomService {
         if (idRoom == null) {
             throw new IllegalArgumentException();
         }
-
+        float valueOfRoom = roomUtils.calculateValueRoom(roomToUpdate);
         Room roomFound = roomRepository.findById(idRoom).orElseThrow(RoomNotFoundException::new);
         roomFound.hasTv = roomToUpdate.hasTv();
         roomFound.hasWifi = roomToUpdate.hasWifi();
-        roomFound.price = roomToUpdate.price();
+        roomFound.price = valueOfRoom;
         roomFound.personsCapacity = roomToUpdate.personsCapacity();
         roomFound.category = Category.builder()
                 .Id(roomToUpdate.category().id())

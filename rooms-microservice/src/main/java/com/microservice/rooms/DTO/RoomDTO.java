@@ -16,8 +16,7 @@ public record RoomDTO(
         boolean hasWifi,
         @NotNull(message = "the hasTv field must not be null nor empty")
         boolean hasTv,
-        @NotNull(message = "the price field must not be null nor empty")
-        double price,
+        float price,
         @NotNull(message = "the persons capacity field must not be null")
         @Range(min = 1, max = 4, message = "the persons capacity must be at least 1 or max 4")
         int personsCapacity,
