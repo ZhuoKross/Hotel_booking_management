@@ -41,6 +41,7 @@ public class RoomService {
                     .hasTv(room.hasTv)
                     .numBeds(room.numBeds)
                     .personsCapacity(room.personsCapacity)
+                    .isOccupied(room.isOccupied)
                     .category(categoryAssociated)
                     .build();
         }).toList();
@@ -60,6 +61,7 @@ public class RoomService {
                 .hasTv(roomEntity.hasTv)
                 .price(roomEntity.price)
                 .personsCapacity(roomEntity.personsCapacity)
+                .isOccupied(roomEntity.isOccupied)
                 .category(categoryAssociated)
                 .build();
     }
@@ -72,6 +74,7 @@ public class RoomService {
                 .hasTv(roomDTO.hasTv())
                 .price(roomDTO.price())
                 .personsCapacity(roomDTO.personsCapacity())
+                .isOccupied(true)
                 .category(Category.builder()
                         .Id(roomDTO.category().id())
                         .name(roomDTO.category().name())
@@ -87,6 +90,7 @@ public class RoomService {
                 .hasWifi(roomCreated.hasWifi)
                 .price(roomCreated.price)
                 .personsCapacity(roomCreated.personsCapacity)
+                .isOccupied(true)
                 .category(categoryAssociated)
                 .build();
     }

@@ -21,6 +21,7 @@ public record RoomDTO(
         @NotNull(message = "the persons capacity field must not be null")
         @Range(min = 1, max = 4, message = "the persons capacity must be at least 1 or max 4")
         int personsCapacity,
+        boolean isOccupied,
         @NotNull
         CategoryDTO category
 ) {}

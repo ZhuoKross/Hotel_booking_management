@@ -27,6 +27,8 @@ public class Room {
     @Column(name = "persons_capacity")
     public int personsCapacity;
 
+    @Column(name = "is_occupied")
+    public boolean isOccupied;
     @OneToOne(targetEntity = Category.class)
     public Category category;
 
