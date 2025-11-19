@@ -30,6 +30,7 @@ public class HostService {
                         .isVipHost(host.isVipHost)
                         .isRegularHost(host.isRegularHost)
                         .document(host.document)
+                        .numVisits(host.numVisits)
                         .name(host.name)
                         .build())
                         .toList();
@@ -46,6 +47,7 @@ public class HostService {
                 .isVipHost(hostFound.isVipHost)
                 .isRegularHost(hostFound.isRegularHost)
                 .document(hostFound.document)
+                .numVisits(hostFound.numVisits)
                 .name(hostFound.name)
                 .build();
     }
@@ -70,6 +72,7 @@ public class HostService {
                 .isRegularHost(hostCreated.isRegularHost)
                 .isVipHost(hostCreated.isVipHost)
                 .document(hostCreated.document)
+                .numVisits(hostCreated.numVisits)
                 .name(hostCreated.name)
                 .build();
     }
@@ -84,6 +87,7 @@ public class HostService {
                 .isVipHost(hostDTO.isVipHost())
                 .isRegularHost(hostDTO.isRegularHost())
                 .document(hostDTO.document())
+                .numVisits(hostDTO.numVisits())
                 .name(hostDTO.name())
                 .build();
 
@@ -101,6 +105,7 @@ public class HostService {
                 .isVipHost(hostToUpdate.isVipHost)
                 .isRegularHost(hostToUpdate.isRegularHost)
                 .document(hostToUpdate.document)
+                .numVisits(hostToUpdate.numVisits)
                 .name(hostToUpdate.name)
                 .build();
     }

@@ -12,21 +12,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Host {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
-
-    @Column
+    @Column(name = "is_vip_host")
     public boolean isVipHost;
-
-    @Column
+    @Column(name = "is_regular_host")
     public boolean isRegularHost;
-
     @Column
     public int document;
-
+    @Column(name = "num_visits")
+    public int numVisits;
     @Column
     public String name;
-
 }

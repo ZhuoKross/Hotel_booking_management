@@ -15,6 +15,8 @@ public record HostDTO(
         boolean isRegularHost,
         @NotNull
         int document,
+        @NotNull
+        int numVisits,
         @NotEmpty
         String name
 ) {}
