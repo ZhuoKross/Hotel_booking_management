@@ -20,7 +20,7 @@ public class CustomErrorDecoder implements ErrorDecoder {
                 return new ServiceUnavailableException();
             }
             default -> {
-                return new RuntimeException("An error has occurred");
+                return new RuntimeException("An error has occurred. ERROR: " + statusResponse + " " + response.body());
             }
         }
     }

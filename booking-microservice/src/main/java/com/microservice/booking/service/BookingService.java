@@ -10,9 +10,12 @@ import com.microservice.booking.Client.model.RoomDTO;
 import com.microservice.booking.DTO.BookingDTO;
 import com.microservice.booking.DTO.ResponseBookingDTO;
 import com.microservice.booking.Entity.Booking;
+import com.microservice.booking.Utils.BookingUtils;
 import com.microservice.booking.exceptions.BookingNotFoundException;
+import com.microservice.booking.exceptions.RangeDateNotValidException;
 import com.microservice.booking.repository.BookingRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 
@@ -25,11 +28,13 @@ public class BookingService {
     private BookingRepository bookingRepository;
     private HostClient hostClient;
     private RoomClient roomClient;
+    private BookingUtils bookingUtils;
 
-    public BookingService(BookingRepository bookingRepository, HostClient hostClient, RoomClient roomClient) {
+    public BookingService(BookingRepository bookingRepository, HostClient hostClient, RoomClient roomClient, BookingUtils bookingUtils) {
         this.bookingRepository = bookingRepository;
         this.hostClient = hostClient;
         this.roomClient = roomClient;
+        this.bookingUtils = bookingUtils;
     }
 
 
@@ -50,7 +55,8 @@ public class BookingService {
                             .idBooking(bookingEntity.idBooking)
                             .startDate(bookingEntity.startDate)
                             .endDate(bookingEntity.endDate)
-                            .rooms(roomData)
+                            .totalPrice(bookingEntity.totalPrice)
+                            .room(roomData)
                             .hosts(hostData)
                             .build();
                 })
@@ -74,7 +80,8 @@ public class BookingService {
                 .idBooking(bookingFound.idBooking)
                 .startDate(bookingFound.startDate)
                 .endDate(bookingFound.endDate)
-                .rooms(roomData)
+                .totalPrice(bookingFound.totalPrice)
+                .room(roomData)
                 .hosts(hostData)
                 .build();
 
@@ -83,16 +90,43 @@ public class BookingService {
 
 
     public ResponseBookingDTO createBooking (BookingDTO bookingDTO){
-        ResponseHostObj<HostDTO> hostDTO = hostClient.getHost(bookingDTO.idHost());
-        ResponseRoomObj<RoomDTO> roomDTO = roomClient.getRoomClient(bookingDTO.idRoom());
-        HostDTO hostData = hostDTO.data();
-        RoomDTO roomData = roomDTO.data();
+        int startDayBooking = bookingDTO.startDate().getDayOfMonth();
+        int endDayBooking = bookingDTO.endDate().getDayOfMonth();
+        if(startDayBooking > endDayBooking){
+            throw new RangeDateNotValidException("the start date of the booking cannot be earlier than the end date of the booking");
+        }
+        ResponseHostObj<HostDTO> hostDTOReceived = hostClient.getHost(bookingDTO.idHost());
+        ResponseRoomObj<RoomDTO> roomDTOReceived = roomClient.getRoomClient(bookingDTO.idRoom());
+        HostDTO hostData = hostDTOReceived.data();
+        RoomDTO roomData = roomDTOReceived.data();
 
-        System.out.println("data of HostDTO:" +  hostData);
-        System.out.println("data of RoomDTODTO:" +  hostData);
+        HostDTO hostToUpdate = HostDTO.builder()
+                .name(hostData.name())
+                .isVipHost(hostData.isVipHost())
+                .isRegularHost(hostData.isRegularHost())
+                .document(hostData.document())
+                .numVisits(hostData.numVisits() + 1)
+                .build();
+        ResponseHostObj<HostDTO> updatedHost = hostClient.updateHost(hostData.id(), hostToUpdate);
+
+        float totalPriceBooking = bookingUtils.calculateTotalPriceBooking(roomData, updatedHost.data(), startDayBooking, endDayBooking);
+
+        RoomDTO roomToUpdate = RoomDTO.builder()
+                .id(roomData.id())
+                .hasTv(roomData.hasTv())
+                .hasWifi(roomData.hasWifi())
+                .price(roomData.price())
+                .personsCapacity(roomData.personsCapacity())
+                .isOccupied(true)
+                .numBeds(roomData.numBeds())
+                .categories(roomData.categories())
+                .build();
+        ResponseRoomObj<RoomDTO> roomUpdated = roomClient.updateRoom(roomToUpdate, roomData.id());
+
         Booking bookingEntity = Booking.builder()
                 .startDate(bookingDTO.startDate())
                 .endDate(bookingDTO.endDate())
+                .totalPrice(totalPriceBooking)
                 .idHost(bookingDTO.idHost())
                 .idRoom(bookingDTO.idRoom())
                 .build();
@@ -103,8 +137,9 @@ public class BookingService {
                 .idBooking(bookingCreated.idBooking)
                 .startDate(bookingCreated.startDate)
                 .endDate(bookingCreated.endDate)
-                .rooms(roomData)
-                .hosts(hostData)
+                .totalPrice(bookingCreated.totalPrice)
+                .room(roomData)
+                .hosts(updatedHost.data())
                 .build();
     }
 }

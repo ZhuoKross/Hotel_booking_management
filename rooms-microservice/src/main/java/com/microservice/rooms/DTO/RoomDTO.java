@@ -1,10 +1,10 @@
 package com.microservice.rooms.DTO;
 
-import com.microservice.rooms.Entity.Category;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import org.hibernate.validator.constraints.Range;
+
+import java.util.List;
 
 @Builder
 public record RoomDTO(
@@ -22,5 +22,5 @@ public record RoomDTO(
         int personsCapacity,
         boolean isOccupied,
         @NotNull
-        CategoryDTO category
+        List<CategoryDTO> categories
 ) {}

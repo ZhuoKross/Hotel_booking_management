@@ -83,20 +83,13 @@ public class HostService {
             throw new DocumentLengthNotValidException();
         }
 
-        Host hostEntity = Host.builder()
-                .isVipHost(hostDTO.isVipHost())
-                .isRegularHost(hostDTO.isRegularHost())
-                .document(hostDTO.document())
-                .numVisits(hostDTO.numVisits())
-                .name(hostDTO.name())
-                .build();
-
         Host hostToUpdate = hostRepository.findById(idHost).orElseThrow(HostNotFoundException::new);
 
-        hostToUpdate.isRegularHost = hostEntity.isRegularHost;
-        hostToUpdate.isVipHost = hostEntity.isVipHost;
-        hostToUpdate.document = hostEntity.document;
-        hostToUpdate.name = hostEntity.name;
+        hostToUpdate.isRegularHost = hostDTO.isRegularHost();
+        hostToUpdate.isVipHost = hostDTO.isVipHost();
+        hostToUpdate.document = hostDTO.document();
+        hostToUpdate.numVisits = hostDTO.numVisits();
+        hostToUpdate.name = hostDTO.name();
 
         hostRepository.save(hostToUpdate);
 

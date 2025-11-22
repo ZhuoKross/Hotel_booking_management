@@ -31,7 +31,7 @@ public class CategoryService {
             throw new IllegalArgumentException();
         }
 
-        Category categoryFound = categoryRepository.findById(idCategory).orElseThrow(() -> new CategoryNotFoundException("The category does not exists"));
+        Category categoryFound = categoryRepository.findById(idCategory).orElseThrow(() -> new CategoryNotFoundException("The categories does not exists"));
         return CategoryDTO.builder()
                 .id(categoryFound.Id)
                 .name(categoryFound.name)

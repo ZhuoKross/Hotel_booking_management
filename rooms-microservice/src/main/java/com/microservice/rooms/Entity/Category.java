@@ -15,8 +15,9 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long Id;
-
     @Column
     public String name;
-
+    @ManyToOne(targetEntity = Room.class)
+    @JoinColumn
+    public Room room;
 }

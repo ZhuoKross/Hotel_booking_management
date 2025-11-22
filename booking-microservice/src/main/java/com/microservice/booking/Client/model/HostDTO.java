@@ -8,5 +8,6 @@ public record HostDTO(
         boolean isVipHost,
         boolean isRegularHost,
         int document,
-        String name) {
-}
+        int numVisits,
+        String name
+) {}

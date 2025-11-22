@@ -1,11 +1,11 @@
-package com.microservice.booking.Client.model;
+package com.microservice.rooms.DTO;
 
 import lombok.Builder;
 
 import java.util.List;
 
 @Builder
-public record RoomDTO(
+public record RoomResponseDTO(
         Long id,
         int numBeds,
         boolean hasWifi,
@@ -13,6 +13,5 @@ public record RoomDTO(
         float price,
         int personsCapacity,
         boolean isOccupied,
-        List<CategoryChildDTO> categories
+        List<CategoryDTO> categories
 ) {}
-

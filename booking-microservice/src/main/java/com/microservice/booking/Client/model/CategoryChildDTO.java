@@ -1,9 +1,9 @@
-package com.microservice.rooms.DTO;
+package com.microservice.booking.Client.model;
 
 import lombok.Builder;
 
 @Builder
-public record CategoryDTO(
+public record CategoryChildDTO(
         Long id,
         String name,
         Long idRoom

@@ -14,8 +14,6 @@ public class RoomUtils {
     public final float valuePerBed = 11.8f;
     public final float valuePerPerson = 16.5f;
 
-    public final float valueOfLuxuryCategory = (totalValue * 12) / 100;
-
     public float calculateValueRoom(RoomDTO room){
         DecimalFormat df = new DecimalFormat("#.00");
         totalValue += room.personsCapacity() * valuePerPerson;
@@ -26,14 +24,15 @@ public class RoomUtils {
         if (room.hasTv()){
             totalValue += valueOfTvBenefit;
         }
-        if (room.category().name().equals("luxury")){
-            totalValue += (totalValue * 10) / 100;
-        }
-        if(room.category().name().equals("VIP")){
-            totalValue += (totalValue * 10) / 100;
-        }
+        room.categories().forEach((categoryDTO) -> {
+            if (categoryDTO.name().equals("luxury")){
+                totalValue += (totalValue * 10) / 100;
+            }
+            if(categoryDTO.name().equals("VIP")){
+                totalValue += (totalValue * 10) / 100;
+            }
+        });
 
         return Float.parseFloat(df.format(totalValue));
     }
-
 }
