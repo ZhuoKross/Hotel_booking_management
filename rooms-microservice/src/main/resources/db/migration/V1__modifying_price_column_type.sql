@@ -1,0 +1,2 @@
+ALTER TABLE rooms
+MODIFY price FLOAT;

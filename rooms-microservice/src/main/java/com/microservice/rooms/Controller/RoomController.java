@@ -1,6 +1,7 @@
 package com.microservice.rooms.Controller;
 
 import com.microservice.rooms.DTO.RoomDTO;
+import com.microservice.rooms.DTO.RoomResponseDTO;
 import com.microservice.rooms.Entity.Room;
 import com.microservice.rooms.Service.RoomService;
 import com.microservice.rooms.Utils.Response;
@@ -22,28 +23,27 @@ public class RoomController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Response<List<RoomDTO>>> getAllRooms() {
-        List<RoomDTO> roomList = roomService.getAllRooms();
-        return ResponseEntity.ok(new Response<List<RoomDTO>>("Rooms fetched successfully", LocalDateTime.now(), roomList));
+    public ResponseEntity<Response<List<RoomResponseDTO>>> getAllRooms() {
+        List<RoomResponseDTO> roomList = roomService.getAllRooms();
+        return ResponseEntity.ok(new Response<List<RoomResponseDTO>>("Rooms fetched successfully", LocalDateTime.now(), roomList));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response<RoomDTO>> getOneRoom(@PathVariable("id") Long idRoom) {
-        RoomDTO roomDTOFound = roomService.getOneRoom(idRoom);
-        return ResponseEntity.ok(new Response<RoomDTO>("Room fetched successfully", LocalDateTime.now(), roomDTOFound));
+    public ResponseEntity<Response<RoomResponseDTO>> getOneRoom(@PathVariable("id") Long idRoom) {
+        RoomResponseDTO roomDTOFound = roomService.getOneRoom(idRoom);
+        return ResponseEntity.ok(new Response<RoomResponseDTO>("Room fetched successfully", LocalDateTime.now(), roomDTOFound));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Response<RoomDTO>> createRoom(@Valid @RequestBody RoomDTO requesRoomDTO) {
-        RoomDTO roomDTOCreated = roomService.createRoom(requesRoomDTO);
-        return ResponseEntity.ok(new Response<RoomDTO>("Room created successfully", LocalDateTime.now(), roomDTOCreated));
+    public ResponseEntity<Response<RoomResponseDTO>> createRoom(@Valid @RequestBody RoomDTO requestRoomDTO) {
+        RoomResponseDTO roomDTOCreated = roomService.createRoom(requestRoomDTO);
+        return ResponseEntity.ok(new Response<RoomResponseDTO>("Room created successfully", LocalDateTime.now(), roomDTOCreated));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Response<RoomDTO>> updateRoom(@Valid @RequestBody RoomDTO roomToUpdate, @PathVariable("id") Long idRoom) {
-        System.out.println("body request: " + roomToUpdate);
-        RoomDTO roomUpdated = roomService.updateRoom(roomToUpdate, idRoom);
-        return ResponseEntity.ok(new Response<RoomDTO>("Room updated successfully", LocalDateTime.now(), roomUpdated));
+    public ResponseEntity<Response<RoomResponseDTO>> updateRoom(@Valid @RequestBody RoomDTO roomToUpdate, @PathVariable("id") Long idRoom) {
+        RoomResponseDTO roomUpdated = roomService.updateRoom(roomToUpdate, idRoom);
+        return ResponseEntity.ok(new Response<RoomResponseDTO>("Room updated successfully", LocalDateTime.now(), roomUpdated));
     }
 
     @DeleteMapping("/delete/{id}")

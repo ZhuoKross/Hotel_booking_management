@@ -26,5 +26,7 @@ public class Booking {
     public Long idHost;
     @Column(name = "id_room")
     public Long idRoom;
+    @Column(name = "tota_price")
+    public float totalPrice;
 
 }

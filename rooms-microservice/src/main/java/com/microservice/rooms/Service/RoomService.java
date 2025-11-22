@@ -2,6 +2,7 @@ package com.microservice.rooms.Service;
 
 import com.microservice.rooms.DTO.CategoryDTO;
 import com.microservice.rooms.DTO.RoomDTO;
+import com.microservice.rooms.DTO.RoomResponseDTO;
 import com.microservice.rooms.Entity.Category;
 import com.microservice.rooms.Entity.Room;
 import com.microservice.rooms.Repository.RoomRepository;
@@ -9,6 +10,7 @@ import com.microservice.rooms.Utils.RoomUtils;
 import com.microservice.rooms.exceptions.RoomNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,34 +26,42 @@ public class RoomService {
         this.roomUtils = roomUtils;
     }
 
-    public List<RoomDTO> getAllRooms() {
+    public List<RoomResponseDTO> getAllRooms() {
         List<Room> roomListEntity = roomRepository.findAll();
         if (roomListEntity.isEmpty()) {
             throw new RoomNotFoundException();
         }
 
+
         return roomListEntity.stream().map((room) -> {
-            CategoryDTO categoryAssociated = categoryService.getOneCategory(room.category.Id);
-            return RoomDTO.builder()
+            List<Category> categoriesAssociated = room.categories;
+            List<CategoryDTO> categoryDTOList = categoriesAssociated.stream().map((category) -> {
+                return CategoryDTO.builder().id(category.Id).name(category.name).idRoom(category.room.id).build();
+            }).toList();
+
+            return RoomResponseDTO.builder()
                     .id(room.id)
                     .hasWifi(room.hasWifi)
                     .hasTv(room.hasTv)
                     .numBeds(room.numBeds)
                     .personsCapacity(room.personsCapacity)
                     .isOccupied(room.isOccupied)
-                    .category(categoryAssociated)
+                    .price(room.price)
+                    .categories(categoryDTOList)
                     .build();
         }).toList();
     }
 
-    public RoomDTO getOneRoom(Long idRoom) {
+    public RoomResponseDTO getOneRoom(Long idRoom) {
         if (idRoom == null) {
             throw new IllegalArgumentException();
         }
 
         Room roomEntity = roomRepository.findById(idRoom).orElseThrow(RoomNotFoundException::new);
-        CategoryDTO categoryAssociated = categoryService.getOneCategory(roomEntity.category.Id);
-        return RoomDTO.builder()
+        List<CategoryDTO> categoriesAssociated = roomEntity.categories.stream().map((category) -> {
+            return CategoryDTO.builder().id(category.Id).name(category.name).idRoom(category.room.id).build();
+        }).toList();
+        return RoomResponseDTO.builder()
                 .id(roomEntity.id)
                 .numBeds(roomEntity.numBeds)
                 .hasWifi(roomEntity.hasWifi)
@@ -59,12 +69,12 @@ public class RoomService {
                 .price(roomEntity.price)
                 .personsCapacity(roomEntity.personsCapacity)
                 .isOccupied(roomEntity.isOccupied)
-                .category(categoryAssociated)
+                .categories(categoriesAssociated)
                 .build();
     }
 
 
-    public RoomDTO createRoom(RoomDTO roomDTO) {
+    public RoomResponseDTO createRoom(RoomDTO roomDTO) {
         float valueOfRoom = roomUtils.calculateValueRoom(roomDTO);
         Room roomEntity = Room.builder()
                 .numBeds(roomDTO.numBeds())
@@ -72,55 +82,63 @@ public class RoomService {
                 .hasTv(roomDTO.hasTv())
                 .price(valueOfRoom)
                 .personsCapacity(roomDTO.personsCapacity())
-                .isOccupied(true)
-                .category(Category.builder()
-                        .Id(roomDTO.category().id())
-                        .name(roomDTO.category().name())
-                        .build())
+                .isOccupied(false)
                 .build();
+        List<Category> categories = roomDTO.categories().stream().map((categoryDTO) -> {
+            return Category.builder().Id(categoryDTO.id()).name(categoryDTO.name()).room(roomEntity).build();
+        }).toList();
+
+        roomEntity.setCategories(categories);
 
         Room roomCreated = roomRepository.save(roomEntity);
-        CategoryDTO categoryAssociated = categoryService.getOneCategory(roomCreated.category.Id);
+        List<CategoryDTO> categoriesAssociated = roomCreated.categories.stream().map((category) -> {
+            return CategoryDTO.builder().id(category.Id).name(category.name).idRoom(roomCreated.id).build();
+        }).toList();
 
-        return RoomDTO.builder()
+        return RoomResponseDTO.builder()
                 .id(roomCreated.id)
                 .hasTv(roomCreated.hasTv)
                 .hasWifi(roomCreated.hasWifi)
                 .price(roomCreated.price)
                 .personsCapacity(roomCreated.personsCapacity)
                 .isOccupied(true)
-                .category(categoryAssociated)
+                .categories(categoriesAssociated)
                 .build();
     }
 
-    public RoomDTO updateRoom(RoomDTO roomToUpdate, Long idRoom) {
+    public RoomResponseDTO updateRoom(RoomDTO roomToUpdate, Long idRoom) {
         if (idRoom == null) {
             throw new IllegalArgumentException();
         }
         float valueOfRoom = roomUtils.calculateValueRoom(roomToUpdate);
         Room roomFound = roomRepository.findById(idRoom).orElseThrow(RoomNotFoundException::new);
-        roomFound.hasTv = roomToUpdate.hasTv();
-        roomFound.hasWifi = roomToUpdate.hasWifi();
-        roomFound.price = valueOfRoom;
-        roomFound.personsCapacity = roomToUpdate.personsCapacity();
-        roomFound.category = Category.builder()
-                .Id(roomToUpdate.category().id())
-                .name(roomToUpdate.category().name())
-                .build();
-        roomFound.numBeds = roomToUpdate.numBeds();
+        roomFound.setHasTv(roomToUpdate.hasTv());
+        roomFound.setHasWifi(roomToUpdate.hasWifi());
+        roomFound.setPrice(valueOfRoom);
+        roomFound.setPersonsCapacity(roomToUpdate.personsCapacity());
+        roomFound.setOccupied(roomToUpdate.isOccupied());
+        roomFound.setNumBeds(roomToUpdate.numBeds());
+        List<Category> categoryListEntities = new ArrayList<>();
+        for(var categoryDTO : roomToUpdate.categories()){
+            categoryListEntities.add(
+                    Category.builder().Id(categoryDTO.id()).name(categoryDTO.name()).room(roomFound).build()
+            );
+        }
+        roomFound.setCategories(categoryListEntities);
 
-        roomRepository.save(roomFound);
+        Room roomCreated = roomRepository.save(roomFound);
+        List<CategoryDTO> categoryDTOList = roomCreated.categories.stream().map((category) -> {
+            return CategoryDTO.builder().id(category.Id).name(category.name).idRoom(category.room.id).build();
+        }).toList();
 
-        return RoomDTO.builder()
-                .id(roomFound.id)
-                .hasTv(roomFound.hasTv)
-                .hasWifi(roomFound.hasWifi)
-                .price(roomFound.price)
-                .personsCapacity(roomFound.personsCapacity)
-                .category(CategoryDTO.builder()
-                        .id(roomFound.category.Id)
-                        .name(roomFound.category.name)
-                        .build())
+        return RoomResponseDTO.builder()
+                .id(roomCreated.id)
+                .hasTv(roomCreated.hasTv)
+                .hasWifi(roomCreated.hasWifi)
+                .price(roomCreated.price)
+                .personsCapacity(roomCreated.personsCapacity)
+                .isOccupied(roomCreated.isOccupied)
+                .categories(categoryDTOList)
                 .build();
     }
 

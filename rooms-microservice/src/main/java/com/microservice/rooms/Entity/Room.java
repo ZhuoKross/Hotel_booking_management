@@ -5,14 +5,18 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
 
 @Table(name = "rooms")
 @Entity
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Room {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
@@ -26,10 +30,8 @@ public class Room {
     public float price;
     @Column(name = "persons_capacity")
     public int personsCapacity;
-
     @Column(name = "is_occupied")
     public boolean isOccupied;
-    @OneToOne(targetEntity = Category.class)
-    public Category category;
-
+    @OneToMany(targetEntity = Category.class, fetch = FetchType.LAZY, mappedBy = "room", cascade = CascadeType.PERSIST)
+    public List<Category> categories;
 }

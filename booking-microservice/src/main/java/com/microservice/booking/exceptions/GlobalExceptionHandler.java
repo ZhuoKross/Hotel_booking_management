@@ -51,4 +51,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Response<String>> handleServiceUnavailableException(ServiceUnavailableException exception){
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new Response<String>("The service is unavailable right now, please try again later.", LocalDateTime.now(), exception.getMessage()));
     }
+
+    @ExceptionHandler(RangeDateNotValidException.class)
+    public ResponseEntity<Response<String>> handleRangeDateNotValidException(RangeDateNotValidException exception){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("The range of the date of the booking is not valid", LocalDateTime.now(), exception.getMessage()));
+    }
 }
