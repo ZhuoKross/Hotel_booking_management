@@ -84,13 +84,21 @@ public class RoomService {
                 .personsCapacity(roomDTO.personsCapacity())
                 .isOccupied(false)
                 .build();
-        List<Category> categories = roomDTO.categories().stream().map((categoryDTO) -> {
-            return Category.builder().Id(categoryDTO.id()).name(categoryDTO.name()).room(roomEntity).build();
-        }).toList();
+        List<Category> categories = new ArrayList<>();
+
+        for(CategoryDTO category : roomDTO.categories()){
+            CategoryDTO categoryFound = categoryService.getOneCategory(category.id());
+            Category categoryToAssociate = Category.builder()
+                    .name(categoryFound.name())
+                    .room(roomEntity)
+                    .build();
+            categories.add(categoryToAssociate);
+        }
 
         roomEntity.setCategories(categories);
 
         Room roomCreated = roomRepository.save(roomEntity);
+
         List<CategoryDTO> categoriesAssociated = roomCreated.categories.stream().map((category) -> {
             return CategoryDTO.builder().id(category.Id).name(category.name).idRoom(roomCreated.id).build();
         }).toList();
@@ -120,8 +128,9 @@ public class RoomService {
         roomFound.setNumBeds(roomToUpdate.numBeds());
         List<Category> categoryListEntities = new ArrayList<>();
         for(var categoryDTO : roomToUpdate.categories()){
+            CategoryDTO categoryFound = categoryService.getOneCategory(categoryDTO.id());
             categoryListEntities.add(
-                    Category.builder().Id(categoryDTO.id()).name(categoryDTO.name()).room(roomFound).build()
+                    Category.builder().Id(categoryFound.id()).name(categoryFound.name()).room(roomFound).build()
             );
         }
         roomFound.setCategories(categoryListEntities);

@@ -59,8 +59,7 @@ public class HostService {
         }
 
         Host hostEntity = Host.builder()
-                .isRegularHost(hostDTO.isRegularHost())
-                .isVipHost(hostDTO.isVipHost())
+                .isRegularHost(true)
                 .document(hostDTO.document())
                 .name(hostDTO.name())
                 .build();
@@ -85,13 +84,17 @@ public class HostService {
 
         Host hostToUpdate = hostRepository.findById(idHost).orElseThrow(HostNotFoundException::new);
 
-        hostToUpdate.isRegularHost = hostDTO.isRegularHost();
-        hostToUpdate.isVipHost = hostDTO.isVipHost();
         hostToUpdate.document = hostDTO.document();
         hostToUpdate.numVisits = hostDTO.numVisits();
         hostToUpdate.name = hostDTO.name();
 
-        hostRepository.save(hostToUpdate);
+        if(hostToUpdate.numVisits >= 3){
+            hostToUpdate.isVipHost = true;
+        }else {
+            hostToUpdate.isRegularHost = true;
+        }
+
+        Host hostUpdated = hostRepository.save(hostToUpdate);
 
         return HostDTO.builder()
                 .id(hostToUpdate.id)
