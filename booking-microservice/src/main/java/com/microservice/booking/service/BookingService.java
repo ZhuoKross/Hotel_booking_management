@@ -142,4 +142,28 @@ public class BookingService {
                 .hosts(updatedHost.data())
                 .build();
     }
+
+
+    public ResponseBookingDTO updateBooking (BookingDTO bookingDTO){
+        int startDayBooking = bookingDTO.startDate().getDayOfMonth();
+        int endDayBooking = bookingDTO.endDate().getDayOfMonth();
+        if(startDayBooking > endDayBooking){
+            throw new RangeDateNotValidException("the start date of the booking cannot be earlier than the end date of the booking");
+        }
+        ResponseHostObj<HostDTO> hostDTOReceived = hostClient.getHost(bookingDTO.idHost());
+        ResponseRoomObj<RoomDTO> roomDTOReceived = roomClient.getRoomClient(bookingDTO.idRoom());
+        HostDTO hostData = hostDTOReceived.data();
+        RoomDTO roomData = roomDTOReceived.data();
+    }
+
+
+    public void deleteBooking (Long idBooking){
+        if(idBooking == null){
+            throw new IllegalArgumentException("The id has to be a number");
+        }
+
+
+
+        bookingRepository.deleteById(idBooking);
+    }
 }

@@ -24,21 +24,27 @@ public class BookingController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllBookings() {
+    public ResponseEntity<Response<List<ResponseBookingDTO>>> getAllBookings() {
         List<ResponseBookingDTO> bookingList = bookingService.getAllBookings();
         return ResponseEntity.ok(new Response<List<ResponseBookingDTO>>("Bookings fetched succesfully", LocalDateTime.now(), bookingList));
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBooking(@PathVariable Long id) {
+    public ResponseEntity<Response<ResponseBookingDTO>> getBooking(@PathVariable Long id) {
         ResponseBookingDTO bookingDTO = bookingService.getBooking(id);
         return ResponseEntity.ok(new Response<ResponseBookingDTO>("Booking fetched succesfully", LocalDateTime.now(), bookingDTO));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createBooking(@RequestBody BookingDTO requestBookingDTO) {
+    public ResponseEntity<Response<ResponseBookingDTO>> createBooking(@RequestBody BookingDTO requestBookingDTO) {
         ResponseBookingDTO responseBookingDTO = bookingService.createBooking(requestBookingDTO);
         return ResponseEntity.ok(new Response<ResponseBookingDTO>("Booking created succesfully", LocalDateTime.now(), responseBookingDTO));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response<String>> deleteBooking (@PathVariable("id") Long idBooking){
+        bookingService.deleteBooking(idBooking);
+        return ResponseEntity.ok(new Response<String>("Booking deleted succesfully.", LocalDateTime.now(), "no data"));
     }
 }
