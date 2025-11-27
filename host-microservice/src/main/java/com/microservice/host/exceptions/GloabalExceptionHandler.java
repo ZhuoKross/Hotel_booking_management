@@ -1,6 +1,7 @@
 package com.microservice.host.exceptions;
 
 import com.microservice.host.Utils.Response;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -37,5 +38,15 @@ public class GloabalExceptionHandler {
     @ExceptionHandler(DocumentLengthNotValidException.class)
     public ResponseEntity<Response<String>> handleDocumentNotValid (){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("The length of the document has to be at least of 10 digits.", LocalDateTime.now(), "no data"));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Response<String>> handleConstraintExceptions (DataIntegrityViolationException exception){
+        String cause = exception.getMessage();
+        String message = "";
+        if(cause.contains("uc_document")){
+            message = "The document already exists";
+        }
+       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>(message, LocalDateTime.now(), "no data"));
     }
 }

@@ -19,7 +19,7 @@ public class Host {
     public boolean isVipHost;
     @Column(name = "is_regular_host")
     public boolean isRegularHost;
-    @Column
+    @Column()
     public int document;
     @Column(name = "num_visits")
     public int numVisits;

@@ -9,13 +9,10 @@ import org.hibernate.validator.constraints.Range;
 @Builder
 public record HostDTO(
         Long id,
-        @NotNull
         boolean isVipHost,
-        @NotNull
         boolean isRegularHost,
         @NotNull
         int document,
-        @NotNull
         int numVisits,
         @NotEmpty
         String name

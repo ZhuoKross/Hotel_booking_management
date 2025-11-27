@@ -109,8 +109,6 @@ public class BookingService {
                 .build();
         ResponseHostObj<HostDTO> updatedHost = hostClient.updateHost(hostData.id(), hostToUpdate);
 
-        float totalPriceBooking = bookingUtils.calculateTotalPriceBooking(roomData, updatedHost.data(), startDayBooking, endDayBooking);
-
         RoomDTO roomToUpdate = RoomDTO.builder()
                 .id(roomData.id())
                 .hasTv(roomData.hasTv())
@@ -123,6 +121,7 @@ public class BookingService {
                 .build();
         ResponseRoomObj<RoomDTO> roomUpdated = roomClient.updateRoom(roomToUpdate, roomData.id());
 
+        float totalPriceBooking = bookingUtils.calculateTotalPriceBooking(roomData, updatedHost.data(), startDayBooking, endDayBooking);
         Booking bookingEntity = Booking.builder()
                 .startDate(bookingDTO.startDate())
                 .endDate(bookingDTO.endDate())
