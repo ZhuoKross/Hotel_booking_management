@@ -1,6 +1,7 @@
 package com.microservice.booking.Entity;
 
 
+import com.microservice.booking.Utils.StatusBooking;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,5 +29,7 @@ public class Booking {
     public Long idRoom;
     @Column(name = "tota_price")
     public float totalPrice;
+    @Enumerated(EnumType.STRING)
+    public StatusBooking status;
 
 }

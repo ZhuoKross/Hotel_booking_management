@@ -1,10 +1,12 @@
 package com.microservice.booking.controller;
 
 import com.microservice.booking.DTO.BookingDTO;
+import com.microservice.booking.DTO.DeleteBookingDTO;
 import com.microservice.booking.DTO.ResponseBookingDTO;
 import com.microservice.booking.Entity.Booking;
 import com.microservice.booking.Utils.Response;
 import com.microservice.booking.service.BookingService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,14 +39,20 @@ public class BookingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Response<ResponseBookingDTO>> createBooking(@RequestBody BookingDTO requestBookingDTO) {
+    public ResponseEntity<Response<ResponseBookingDTO>> createBooking(@RequestBody @Valid BookingDTO requestBookingDTO) {
         ResponseBookingDTO responseBookingDTO = bookingService.createBooking(requestBookingDTO);
         return ResponseEntity.ok(new Response<ResponseBookingDTO>("Booking created succesfully", LocalDateTime.now(), responseBookingDTO));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Response<ResponseBookingDTO>> updateBooking (@PathVariable("id") Long id, @RequestBody @Valid BookingDTO bookingToUpdate){
+        ResponseBookingDTO updatedBooking = bookingService.updateBooking(id, bookingToUpdate);
+        return ResponseEntity.ok(new Response<ResponseBookingDTO>("Booking updated succesfully", LocalDateTime.now(), updatedBooking));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Response<String>> deleteBooking (@PathVariable("id") Long idBooking){
         bookingService.deleteBooking(idBooking);
-        return ResponseEntity.ok(new Response<String>("Booking deleted succesfully.", LocalDateTime.now(), "no data"));
+        return ResponseEntity.ok(new Response<String>("Booking deleted successfully.", LocalDateTime.now(), "no data"));
     }
 }

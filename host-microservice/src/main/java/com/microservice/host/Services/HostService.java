@@ -1,6 +1,7 @@
 package com.microservice.host.Services;
 
-import com.microservice.host.DTO.HostDTO;
+import com.microservice.host.DTO.HostInputDTO;
+import com.microservice.host.DTO.HostResponseDTO;
 import com.microservice.host.Entity.Host;
 import com.microservice.host.Repository.HostRepository;
 import com.microservice.host.exceptions.DocumentLengthNotValidException;
@@ -18,14 +19,14 @@ public class HostService {
         this.hostRepository = hostRepository;
     }
 
-    public List<HostDTO> getAllHosts() {
+    public List<HostResponseDTO> getAllHosts() {
         List<Host> hostListEntitys = hostRepository.findAll();
 
         if (hostListEntitys.isEmpty()) {
             throw new HostNotFoundException();
         }
 
-        return hostListEntitys.stream().map((host) -> HostDTO.builder()
+        return hostListEntitys.stream().map((host) -> HostResponseDTO.builder()
                         .id(host.id)
                         .isVipHost(host.isVipHost)
                         .isRegularHost(host.isRegularHost)
@@ -36,13 +37,13 @@ public class HostService {
                         .toList();
     }
 
-    public HostDTO getOneHost(Long idHost) {
+    public HostResponseDTO getOneHost(Long idHost) {
         if(idHost == null){
             throw new IllegalArgumentException();
         }
         Host hostFound = hostRepository.findById(idHost).orElseThrow(HostNotFoundException::new);
 
-        return HostDTO.builder()
+        return HostResponseDTO.builder()
                 .id(hostFound.id)
                 .isVipHost(hostFound.isVipHost)
                 .isRegularHost(hostFound.isRegularHost)
@@ -52,21 +53,21 @@ public class HostService {
                 .build();
     }
 
-    public HostDTO createHost(HostDTO hostDTO) {
+    public HostResponseDTO createHost(HostInputDTO host) {
 
-        if (String.valueOf(hostDTO.document()).length() < 10){
+        if (String.valueOf(host.document()).length() < 10){
             throw new DocumentLengthNotValidException();
         }
 
         Host hostEntity = Host.builder()
                 .isRegularHost(true)
-                .document(hostDTO.document())
-                .name(hostDTO.name())
+                .document(host.document())
+                .name(host.name())
                 .build();
 
         Host hostCreated = hostRepository.save(hostEntity);
 
-        return HostDTO.builder()
+        return HostResponseDTO.builder()
                 .id(hostCreated.id)
                 .isRegularHost(hostCreated.isRegularHost)
                 .isVipHost(hostCreated.isVipHost)
@@ -76,17 +77,17 @@ public class HostService {
                 .build();
     }
 
-    public HostDTO updateHost(Long idHost, HostDTO hostDTO) {
+    public HostResponseDTO updateHost(Long idHost, HostResponseDTO hostResponseDTO) {
 
-        if (String.valueOf(hostDTO.document()).length() < 10){
+        if (String.valueOf(hostResponseDTO.document()).length() < 10){
             throw new DocumentLengthNotValidException();
         }
 
         Host hostToUpdate = hostRepository.findById(idHost).orElseThrow(HostNotFoundException::new);
 
-        hostToUpdate.document = hostDTO.document();
-        hostToUpdate.numVisits = hostDTO.numVisits();
-        hostToUpdate.name = hostDTO.name();
+        hostToUpdate.document = hostResponseDTO.document();
+        hostToUpdate.numVisits = hostResponseDTO.numVisits();
+        hostToUpdate.name = hostResponseDTO.name();
 
         if(hostToUpdate.numVisits >= 3){
             hostToUpdate.isVipHost = true;
@@ -96,7 +97,7 @@ public class HostService {
 
         Host hostUpdated = hostRepository.save(hostToUpdate);
 
-        return HostDTO.builder()
+        return HostResponseDTO.builder()
                 .id(hostToUpdate.id)
                 .isVipHost(hostToUpdate.isVipHost)
                 .isRegularHost(hostToUpdate.isRegularHost)

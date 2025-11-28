@@ -1,17 +1,15 @@
 package com.microservice.host.controller;
 
 
-import com.microservice.host.DTO.HostDTO;
-import com.microservice.host.Entity.Host;
+import com.microservice.host.DTO.HostInputDTO;
+import com.microservice.host.DTO.HostResponseDTO;
 import com.microservice.host.Services.HostService;
 import com.microservice.host.Utils.Response;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -26,30 +24,30 @@ public class HostController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<Response<List<HostDTO>>> getAllHosts() {
-        List<HostDTO> hostDTOList = hostService.getAllHosts();
-        return ResponseEntity.ok(new Response<List<HostDTO>>("Host fetched succesfully", LocalDateTime.now(), hostDTOList));
+    public ResponseEntity<Response<List<HostResponseDTO>>> getAllHosts() {
+        List<HostResponseDTO> hostResponseDTOList = hostService.getAllHosts();
+        return ResponseEntity.ok(new Response<List<HostResponseDTO>>("Host fetched succesfully", LocalDateTime.now(), hostResponseDTOList));
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response<HostDTO>> getHost(@PathVariable("id") Long id) {
-        HostDTO hostFound = hostService.getOneHost(id);
-        return ResponseEntity.ok(new Response<HostDTO>("Host fetched succesfully", LocalDateTime.now(), hostFound));
+    public ResponseEntity<Response<HostResponseDTO>> getHost(@PathVariable("id") Long id) {
+        HostResponseDTO hostFound = hostService.getOneHost(id);
+        return ResponseEntity.ok(new Response<HostResponseDTO>("Host fetched succesfully", LocalDateTime.now(), hostFound));
     }
 
 
     @PostMapping("/create")
-    public ResponseEntity<Response<HostDTO>> createHost(@Valid @RequestBody HostDTO hostDTO) {
-        HostDTO hostCreated = hostService.createHost(hostDTO);
-        return ResponseEntity.ok(new Response<HostDTO>("Host created succesfully", LocalDateTime.now(), hostCreated));
+    public ResponseEntity<Response<HostResponseDTO>> createHost(@Valid @RequestBody HostInputDTO host) {
+        HostResponseDTO hostCreated = hostService.createHost(host);
+        return ResponseEntity.ok(new Response<HostResponseDTO>("Host created succesfully", LocalDateTime.now(), hostCreated));
     }
 
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Response<HostDTO>> updateHost(@PathVariable("id") Long idHost, @RequestBody @Valid HostDTO hostDTO) {
-        HostDTO hostUpdated = hostService.updateHost(idHost, hostDTO);
-        return ResponseEntity.ok(new Response<HostDTO>("Host updated succesfully", LocalDateTime.now(), hostUpdated));
+    public ResponseEntity<Response<HostResponseDTO>> updateHost(@PathVariable("id") Long idHost, @RequestBody @Valid HostResponseDTO hostResponseDTO) {
+        HostResponseDTO hostUpdated = hostService.updateHost(idHost, hostResponseDTO);
+        return ResponseEntity.ok(new Response<HostResponseDTO>("Host updated succesfully", LocalDateTime.now(), hostUpdated));
     }
 
     @DeleteMapping("/delete/{id}")

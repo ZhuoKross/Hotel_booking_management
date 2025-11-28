@@ -56,4 +56,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Response<String>> handleRangeDateNotValidException(RangeDateNotValidException exception){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("The range of the date of the booking is not valid", LocalDateTime.now(), exception.getMessage()));
     }
+
+    @ExceptionHandler(RoomIsAlreadyOccupied.class)
+    public ResponseEntity<Response<String>> handleRoomIsAlreadyOccupied (RoomIsAlreadyOccupied exception){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>(exception.getMessage(), LocalDateTime.now(), "no data"));
+    }
+
 }

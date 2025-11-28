@@ -2,6 +2,7 @@ package com.microservice.rooms.Controller;
 
 import com.microservice.rooms.DTO.RoomDTO;
 import com.microservice.rooms.DTO.RoomResponseDTO;
+import com.microservice.rooms.DTO.isRoomOccupiedValidationDTO;
 import com.microservice.rooms.Entity.Room;
 import com.microservice.rooms.Service.RoomService;
 import com.microservice.rooms.Utils.Response;
@@ -50,5 +51,11 @@ public class RoomController {
     public ResponseEntity<Response<String>> deleteRoom(@PathVariable("id") Long idRoom) {
         roomService.deleteRoom(idRoom);
         return ResponseEntity.ok(new Response<String>("Room deleted successfully", LocalDateTime.now(), "no data"));
+    }
+
+    @GetMapping("/isOccupied/{id}")
+    public  ResponseEntity<Response<isRoomOccupiedValidationDTO>> isRoomOccupied(@PathVariable("id") Long idRoom){
+        isRoomOccupiedValidationDTO roomIsOccupied = roomService.existsRoomOccupied(idRoom);
+        return ResponseEntity.ok(new Response<isRoomOccupiedValidationDTO>("Action performed successfully", LocalDateTime.now(), roomIsOccupied));
     }
 }

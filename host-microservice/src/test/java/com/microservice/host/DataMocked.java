@@ -1,6 +1,5 @@
 package com.microservice.host;
 
-import com.microservice.host.DTO.HostDTO;
 import com.microservice.host.Entity.Host;
 
 import java.util.List;

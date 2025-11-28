@@ -1,6 +1,6 @@
 package com.microservice.host.Services;
 
-import com.microservice.host.DTO.HostDTO;
+import com.microservice.host.DTO.HostResponseDTO;
 import com.microservice.host.DataMocked;
 import com.microservice.host.Entity.Host;
 import com.microservice.host.Repository.HostRepository;
@@ -41,10 +41,10 @@ class HostServiceTest {
 
         when(hostRepository.findById(anyLong())).thenReturn(DataMocked.getOneHostMock());
 
-        HostDTO hostFound = hostService.getOneHost(idHost);
+        HostResponseDTO hostFound = hostService.getOneHost(idHost);
 
         assertNotNull(hostFound);
-        assertInstanceOf(HostDTO.class, hostFound);
+        assertInstanceOf(HostResponseDTO.class, hostFound);
 
     }
 

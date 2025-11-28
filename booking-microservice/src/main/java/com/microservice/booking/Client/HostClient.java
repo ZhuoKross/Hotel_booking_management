@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(
         name = "hostClient",
         url = "http://localhost:9092",
-        configuration = FeignConfiguration.class)
+        configuration = FeignConfiguration.class,
+        path = "/api/v1/hosts"
+)
 public interface HostClient {
-    @GetMapping("/api/v1/hosts/{id}")
+    @GetMapping("/{id}")
     ResponseHostObj<HostDTO> getHost(@PathVariable("id") Long id);
 
-    @PutMapping("/api/v1/hosts/update/{id}")
+    @PutMapping("/update/{id}")
     ResponseHostObj<HostDTO> updateHost(@PathVariable("id") Long idHost, @RequestBody @Valid HostDTO hostDTO);
 }
