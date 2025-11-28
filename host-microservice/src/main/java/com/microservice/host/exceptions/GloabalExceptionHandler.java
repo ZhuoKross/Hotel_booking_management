@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GloabalExceptionHandler {
@@ -30,8 +32,8 @@ public class GloabalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Response<String>> handleNotReadable (){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("Malfomed body request, verify and try again.", LocalDateTime.now(), "no data"));
+    public ResponseEntity<Response<String>> handleNotReadable (HttpMessageNotReadableException exception){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>(exception.getMessage(), LocalDateTime.now(), "no data"));
     }
 
 

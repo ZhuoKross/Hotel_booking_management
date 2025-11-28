@@ -17,8 +17,8 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Response<String>> handleIllegalArgument () {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("Bad argument passed. Verify and try again.", LocalDateTime.now(), "no data"));
+    public ResponseEntity<Response<String>> handleIllegalArgument (IllegalArgumentException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>(exception.getMessage(), LocalDateTime.now(), "no data"));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -56,4 +56,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Response<String>> handleRangeDateNotValidException(RangeDateNotValidException exception){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>("The range of the date of the booking is not valid", LocalDateTime.now(), exception.getMessage()));
     }
+
+    @ExceptionHandler(RoomIsAlreadyOccupied.class)
+    public ResponseEntity<Response<String>> handleRoomIsAlreadyOccupied (RoomIsAlreadyOccupied exception){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>(exception.getMessage(), LocalDateTime.now(), "no data"));
+    }
+
 }

@@ -3,6 +3,7 @@ package com.microservice.rooms.Service;
 import com.microservice.rooms.DTO.CategoryDTO;
 import com.microservice.rooms.DTO.RoomDTO;
 import com.microservice.rooms.DTO.RoomResponseDTO;
+import com.microservice.rooms.DTO.isRoomOccupiedValidationDTO;
 import com.microservice.rooms.Entity.Category;
 import com.microservice.rooms.Entity.Room;
 import com.microservice.rooms.Repository.RoomRepository;
@@ -160,4 +161,13 @@ public class RoomService {
     }
 
 
+    public isRoomOccupiedValidationDTO existsRoomOccupied(Long idRoom){
+        if (idRoom == null) {
+            throw new IllegalArgumentException();
+        }
+
+        boolean isRoomOccupied = roomRepository.existsRoomByIdAndIsOccupied(idRoom, true);
+
+        return new isRoomOccupiedValidationDTO(isRoomOccupied);
+    }
 }
