@@ -55,4 +55,10 @@ public class BookingController {
         bookingService.deleteBooking(idBooking);
         return ResponseEntity.ok(new Response<String>("Booking deleted successfully.", LocalDateTime.now(), "no data"));
     }
+
+    @PutMapping("/check-in/{id}")
+    public ResponseEntity<Response<ResponseBookingDTO>> doCheckIn(@PathVariable("id") Long id){
+        ResponseBookingDTO bookingUpdated = bookingService.doCheckIn(id);
+        return ResponseEntity.ok(new Response<ResponseBookingDTO>("Check-in performed correctly", LocalDateTime.now(), bookingUpdated));
+    }
 }
