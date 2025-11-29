@@ -62,4 +62,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<String>(exception.getMessage(), LocalDateTime.now(), "no data"));
     }
 
+    @ExceptionHandler(CheckInStatusActiveException.class)
+    public ResponseEntity<Response<String>> handleCheckingStatusActiveException(CheckInStatusActiveException exception){
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new Response<String>(exception.getMessage(), LocalDateTime.now(), "no data"));
+    }
+
 }

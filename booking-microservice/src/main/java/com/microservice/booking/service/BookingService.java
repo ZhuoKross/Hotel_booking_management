@@ -15,6 +15,7 @@ import com.microservice.booking.Entity.Booking;
 import com.microservice.booking.Utils.BookingUtils;
 import com.microservice.booking.Utils.StatusBooking;
 import com.microservice.booking.exceptions.BookingNotFoundException;
+import com.microservice.booking.exceptions.CheckInStatusActiveException;
 import com.microservice.booking.exceptions.RangeDateNotValidException;
 import com.microservice.booking.exceptions.RoomIsAlreadyOccupied;
 import com.microservice.booking.repository.BookingRepository;
@@ -291,5 +292,49 @@ public class BookingService {
             throw new IllegalArgumentException("the id has to be a number");
         }
         bookingRepository.deleteById(idBooking);
+    }
+
+    public ResponseBookingDTO doCheckIn(Long idBooking){
+        if(idBooking == null){
+            throw new IllegalArgumentException("The id has to be a number");
+        }
+        ResponseBookingDTO booking = getBooking(idBooking);
+        if (booking.status() == StatusBooking.ACTIVE){
+            throw new CheckInStatusActiveException("The check-in is already done");
+        }
+        ResponseHostObj<HostDTO> hostAssociated = hostClient.getHost(booking.hosts().id());
+        ResponseRoomObj<RoomDTO> roomAssociated = roomClient.getRoomClient(booking.room().id());
+        RoomDTO roomToUpdate = RoomDTO.builder()
+                .id(roomAssociated.data().id())
+                .hasWifi(roomAssociated.data().hasWifi())
+                .hasTv(roomAssociated.data().hasTv())
+                .numBeds(roomAssociated.data().numBeds())
+                .price(roomAssociated.data().price())
+                .personsCapacity(roomAssociated.data().personsCapacity())
+                .isOccupied(true)
+                .categories(roomAssociated.data().categories())
+                .build();
+        ResponseRoomObj<RoomDTO> roomUpdated = roomClient.updateRoom(roomToUpdate, roomToUpdate.id());
+        Booking bookingToUpdate = Booking.builder()
+                .idBooking(booking.idBooking())
+                .startDate(booking.startDate())
+                .endDate(booking.endDate())
+                .idHost(booking.hosts().id())
+                .idRoom(booking.room().id())
+                .totalPrice(booking.totalPrice())
+                .status(StatusBooking.ACTIVE)
+                .build();
+        Booking bookingUpdated = bookingRepository.save(bookingToUpdate);
+
+        return ResponseBookingDTO.builder()
+                .idBooking(bookingUpdated.idBooking)
+                .startDate(bookingUpdated.startDate)
+                .endDate(bookingUpdated.endDate)
+                .totalPrice(bookingUpdated.totalPrice)
+                .room(roomUpdated.data())
+                .hosts(hostAssociated.data())
+                .status(bookingUpdated.status)
+                .build();
+
     }
 }
