@@ -17,6 +17,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+
+
 eureka:
   instance:
     hostname: localhost

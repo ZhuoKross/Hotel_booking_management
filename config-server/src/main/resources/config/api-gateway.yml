@@ -10,29 +10,40 @@ eureka:
 spring:
   cloud:
     gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              enabled: false
-          routes:
-            - id: host-microservice
-              uri: lb://host-microservice
-              predicates:
-                - Path=/api/v1/hosts/**
-            - id: booking-microservice
-              uri: lb://booking-microservice
-              predicates:
-                  - Path=/api/v1/bookings/**
-            - id: rooms-microservice
-              uri: lb://rooms-microservice
-              predicates:
-                  - Path=/api/v1/rooms/**
-            - id: rooms-microservice-categories
-              uri: lb://rooms-microservice
-              predicates:
-                  - Path=/api/v1/categories/**
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: host-microservice
+          uri: lb://host-microservice
+          predicates:
+            - Path=/api/v1/hosts/**
+        - id: booking-microservice
+          uri: lb://booking-microservice
+          predicates:
+            - Path=/api/v1/bookings/**
+        - id: rooms-microservice
+          uri: lb://rooms-microservice
+          predicates:
+            - Path=/api/v1/rooms/**
+        - id: rooms-microservice-categories
+          uri: lb://rooms-microservice
+          predicates:
+            - Path=/api/v1/categories/**
+        - id: room-service-docs
+          uri: lb://rooms-microservice
+          predicates:
+            - Path=/rooms-service-docs/**
+          filters:
+            - StripPrefix=1
 
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    urls:
+      - name: rooms-microservice
+        url: /rooms-service-docs/v3/api-docs
 
 
 logging:
@@ -40,3 +51,13 @@ logging:
     org.springframework.cloud.gateway: DEBUG
     org.springframework.web: DEBUG
     com.netflix.discovery: DEBUG
+
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"

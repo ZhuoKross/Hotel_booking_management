@@ -1,5 +1,6 @@
 package com.microservice.rooms.Service;
 
+import com.microservice.rooms.DTO.CategoryChildDTO;
 import com.microservice.rooms.DTO.CategoryDTO;
 import com.microservice.rooms.Entity.Category;
 import com.microservice.rooms.Repository.CategoryRepository;
@@ -39,9 +40,8 @@ public class CategoryService {
     }
 
 
-    public CategoryDTO createCategory (CategoryDTO categoryDTO){
+    public CategoryDTO createCategory (CategoryChildDTO categoryDTO){
         Category categoryCreated = categoryRepository.save(Category.builder()
-                        .Id(categoryDTO.id())
                         .name(categoryDTO.name())
                         .build());
 
