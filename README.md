@@ -14,35 +14,33 @@ This project uses a **microservices** architecture with service discovery (Eurek
 
 ```mermaid
 flowchart LR
-    subgraph Infrastructure
-        E[Eureka Server\n(Service Discovery)]
-        C[Config Server\n(Centralized Config)]
-        G[API Gateway\n(Reverse Proxy + Swagger UI)]
+    subgraph s1 [Infrastructure]
+        direction LR
+            E["Eureka Server(Service Discovery)"]
+            C["Config Server(Centralized Config)"]
+            G["API Gateway(Reverse Proxy + Swagger UI)"]
+       
+        subgraph Services
+            B[Booking Service]
+            R[Rooms Service]
+            H[Host Service]
+    end
     end
 
-    subgraph Services
-        B[Booking Service]
-        R[Rooms Service]
-        H[Host Service]
-        EM[Employee Service]
-    end
-
+    
     %% relationships
     G -->|routes| B
     G -->|routes| R
     G -->|routes| H
-    G -->|routes| EM
 
     B -->|service registration| E
     R -->|service registration| E
     H -->|service registration| E
-    EM -->|service registration| E
     G -->|service registration| E
 
     B -->|reads config| C
     R -->|reads config| C
     H -->|reads config| C
-    EM -->|reads config| C
     G -->|reads config| C
 
     %% interactions
@@ -92,6 +90,10 @@ All microservices are Spring Boot applications (Maven modules) inside this monor
 
 ## 🔧 Technology Stack
 
+**Standards and Conventions**
+- GitHub Flow + Conventional Commits
+- GitHub Pull Requests for code review
+
 **Core**
 - Java 17+
 - Spring Boot 3.x
@@ -100,22 +102,14 @@ All microservices are Spring Boot applications (Maven modules) inside this monor
 - Spring Cloud:
   - **Eureka** (service discovery)
   - **Spring Cloud Config Server** (centralized configuration)
-  - Spring Cloud Gateway (or a gateway implementation inside `api-gateway`)
+  - Spring Cloud Gateway
 - Lombok
-- Flyway (DB migrations found in modules)
+- Flyway (DB migrations)
 - Maven (multi-module build)
 
 **Documentation**
-- OpenAPI / Swagger annotations (springdoc or springfox style annotations present in `rooms-microservice`)
+- OpenAPI / Swagger annotations 
 - Centralized Swagger UI served by `api-gateway`
-
-**Dev & Infra**
-- Docker (project includes Dockerfiles? — check each service)
-- GitHub Flow + Conventional Commits
-- GitHub Pull Requests for code review
-
-
-
 
 ---
 
@@ -164,7 +158,7 @@ mvn spring-boot:run
 cd ../booking-microservice
 mvn spring-boot:run
 # etc.
-```
+```****
 
 > Note: Each service reads config from Config Server and registers to Eureka. Check each module's `application.yml` for ports and `spring.cloud.config` settings.
 
